@@ -20,7 +20,14 @@ Provide either a dataset ID or name as keyword (named) arguments. Cannot accept 
 - `metadata`: Contains metadata information about the dataset
 	- See Metadata section below for details
 - `attributes`: Contains attribute details presented in a tabular/dataframe format
-	- See `attributes` field in Metadata section below for details
+	- `name`: Attribute name
+	- `role`: Whether the attribute is an ID, feature, or target
+	- `type`: Data type e.g. categorical, integer, continuous
+	- `demographic`: Indicates whether the attribute represents demographic data
+	- `description`: Short description of attribute
+	- `units`: Attribute units for non-categorical data
+	- `missing_values`: Whether there are missing values in the attribute's column
+   
 
 ## `list_available_datasets`
 Prints a list of datasets that can be imported via `fetch_ucirepo`
@@ -75,14 +82,6 @@ none
 - `intro_paper`: Information about dataset's published introductory paper
 - `repository_url`: Link to dataset webpage on the UCI repository
 - `data_url`: Link to raw data file
-- `attributes`
-	- `name`: Attribute name
-	- `role`: Whether the attribute is an ID, feature, or target
-	- `type`: Data type e.g. categorical, integer, continuous
-	- `demographic`: Indicates whether the attribute represents demographic data
-	- `description`: Short description of attribute
-	- `units`: Attribute units for non-categorical data
-	- `missing_values`: Whether there are missing values in the attribute's column
 - `additional_info`: Descriptive free text about dataset
 	- `summary`: General summary 
 	- `purpose`: For what purpose was the dataset created?
