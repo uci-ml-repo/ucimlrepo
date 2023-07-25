@@ -2,6 +2,31 @@
 Package to easily import datasets from the UC Irvine Machine Learning Repository into scripts and notebooks. 
 Pending: name of package and functions
 
+## Example Usage
+
+    from ucimlrepo import fetch_ucirepo, list_available_datasets()
+	
+	# check which datasets can be imported
+	list_available_datasets()
+    
+    # import dataset
+    heart_disease = fetch_ucirepo(id=45)
+    # alternatively fetch_ucirepo(name='Heart Disease')
+    
+    # access data
+    X = heart_disease.data.features
+    y = heart_disease.data.targets
+    # sklearn.linear_model.LinearRegression().fit(X, y)
+    
+    # access metadata
+    print(heart_disease.metadata.uci_id)
+    print(heart_disease.additional_info.summary)
+    
+    # view attribute info in tabular format
+    print(heart_disease.attributes)
+
+
+
 ## `fetch_ucirepo`
 Loads a dataset from the UCI ML Repository, including the dataframes and metadata information.
 
@@ -36,29 +61,6 @@ none
 ### Returns
 none
 
-
-## Example Usage
-
-    from ucimlrepo import fetch_ucirepo, list_available_datasets()
-	
-	# check which datasets can be imported
-	list_available_datasets()
-    
-    # import dataset
-    heart_disease = fetch_ucirepo(id=45)
-    # alternatively fetch_ucirepo(name='Heart Disease')
-    
-    # access data
-    X = heart_disease.data.features
-    y = heart_disease.data.targets
-    # sklearn.linear_model.LinearRegression().fit(X, y)
-    
-    # access metadata
-    print(heart_disease.metadata.uci_id)
-    print(heart_disease.additional_info.summary)
-    
-    # view attribute info in tabular format
-    print(heart_disease.attributes)
 
 
 
