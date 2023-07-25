@@ -1,5 +1,6 @@
 import json
 import urllib.request
+from urllib.parse import quote
 import pandas as pd
 from typing import Optional
 
@@ -27,7 +28,7 @@ def fetch_ucirepo(
     if name:
         if type(name) != str:
             raise ValueError('Name must be a string')
-        api_url += '?name=' + name
+        api_url += '?name=' + quote(name)
     elif id:
         if type(id) != int:
             raise ValueError('ID must be an integer')
@@ -53,7 +54,7 @@ def fetch_ucirepo(
     metadata = data['data']
     
     if not id:
-        id = metadata['id']
+        id = metadata['uci_id']
     elif not name:
         name = metadata['name']
     
@@ -121,6 +122,9 @@ def fetch_ucirepo(
     # attributes.age.role or attributes.slope.description
     # print(attributes) -> json-like dict with keys [name] -> details
 
+    metadata['additional_info'] = dotdict(metadata['additional_info'])
+    metadata['intro_paper'] = dotdict(metadata['intro_paper'])
+    
     # construct result object
     result = {
         'data': dotdict(data),
@@ -129,9 +133,7 @@ def fetch_ucirepo(
     }
 
     # return
-    r = dotdict(result)
-
-    return r
+    return dotdict(result)
     
 
 
@@ -146,3 +148,4 @@ def list_available_datasets():
         data = json.load(resp)
         for dataset in data:
             print('{:<50} {:<6} {:<100}'.format(dataset['name'], dataset['id'], dataset['description']))
+        print()
