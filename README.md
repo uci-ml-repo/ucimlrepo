@@ -11,7 +11,7 @@ Pending: name of package and functions
     
     # import dataset
     heart_disease = fetch_ucirepo(id=45)
-    # alternatively fetch_ucirepo(name='Heart Disease')
+    # alternatively: fetch_ucirepo(name='Heart Disease')
     
     # access data
     X = heart_disease.data.features
@@ -20,9 +20,10 @@ Pending: name of package and functions
     
     # access metadata
     print(heart_disease.metadata.uci_id)
-    print(heart_disease.additional_info.summary)
+    print(heart_disease.metadata.num_instances)
+    print(heart_disease.metadata.additional_info.summary)
     
-    # view attribute info in tabular format
+    # access attribute info in tabular format
     print(heart_disease.attributes)
 
 
@@ -32,19 +33,19 @@ Loads a dataset from the UCI ML Repository, including the dataframes and metadat
 
 ### Parameters
 Provide either a dataset ID or name as keyword (named) arguments. Cannot accept both.
-- `id`: Dataset ID for UCI ML Repository
-- `name`: Dataset name, or substring of name
+- **`id`**: Dataset ID for UCI ML Repository
+- **`name`**: Dataset name, or substring of name
 
 ### Returns
-- `data`: Contains dataset matrices as pandas dataframes
+- **`data`**: Contains dataset matrices as **pandas** dataframes
 	- `ids`: Dataframe of ID columns
 	- `features`: Dataframe of feature columns
 	- `targets`: Dataframe of target columns
 	- `original`: Dataframe consisting of all IDs, features, and targets
 	- `headers`: List of all attribute names/headers
-- `metadata`: Contains metadata information about the dataset
+- **`metadata`**: Contains metadata information about the dataset
 	- See Metadata section below for details
-- `attributes`: Contains attribute details presented in a tabular/dataframe format
+- **`attributes`**: Contains attribute details presented in a tabular/dataframe format
 	- `name`: Attribute name
 	- `role`: Whether the attribute is an ID, feature, or target
 	- `type`: Data type e.g. categorical, integer, continuous
@@ -62,8 +63,6 @@ none
 none
 
 
-
-
 ## Metadata 
 - `uci_id`: Unique dataset identifier for UCI repository 
 - `name`
@@ -79,7 +78,7 @@ none
 - `has_missing_values`: Whether the dataset contains missing values
 - `missing_values_symbol`: Indicates what symbol represents the missing entries (if the dataset has missing values)
 - `year_of_dataset_creation`
-- `dataset_doi`
+- `dataset_doi`: DOI registered for dataset that links to UCI repo dataset page
 - `creators`: List of dataset creator names
 - `intro_paper`: Information about dataset's published introductory paper
 - `repository_url`: Link to dataset webpage on the UCI repository
