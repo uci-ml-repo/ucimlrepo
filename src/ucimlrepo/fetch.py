@@ -143,8 +143,8 @@ def list_available_datasets():
     print('-------------------------------------')
     # change to a static/public URL
     with urllib.request.urlopen('{}/info/available_py_datasets.json'.format(DATASET_FILE_BASE_URL)) as resp:
-        print('{:<50} {:<6} {:<100}'.format('Dataset Name', 'ID', 'Description'))
-        print('{:<50} {:<6} {:<100}'.format('------------', '--', '-----------'))
+        print('{:<50} {:<6} {:<100}'.format('Dataset Name', 'ID', 'Prediction Task'))
+        print('{:<50} {:<6} {:<100}'.format('------------', '--', '---------------'))
         data = json.load(resp)
         for dataset in data:
             print('{:<50} {:<6} {:<100}'.format(dataset['name'], dataset['id'], dataset['description']))
