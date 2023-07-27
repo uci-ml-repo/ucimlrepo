@@ -8,5 +8,6 @@ setup(
       author='Philip Truong',
       author_email='philtr928@example.com',
       license='MIT',
-      packages=["src/ucimlrepo"]
+      package_dir={'': 'src'},
+      packages=find_packages(where='src')
 )
