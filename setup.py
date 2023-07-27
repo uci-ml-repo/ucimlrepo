@@ -11,5 +11,5 @@ setup(
       install_requires=[
           'pandas',
       ],
-      packages=find_packages(exclude=("tests", "test.*", "*test*")),
+      packages=find_packages(where='src', exclude=("tests", "test.*", "*test*")),
 )
