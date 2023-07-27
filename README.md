@@ -2,9 +2,18 @@
 Package to easily import datasets from the UC Irvine Machine Learning Repository into scripts and notebooks. 
 Pending: name of package and functions
 
+## Installation
+In a Jupyter notebook, install with the command 
+
+    !pip3 install --user git+https://github.com/uci-ml-repo/ucimlrepo.git
+    
+Restart the kernel and import the module `ucimlrepo`.
+
+**Note: Package has not been published to pip yet. `pip install mlrepo` will not work at the moment.**
+
 ## Example Usage
 
-    from ucimlrepo import fetch_ucirepo, list_available_datasets()
+    from ucimlrepo import fetch_ucirepo, list_available_datasets
 	
 	# check which datasets can be imported
 	list_available_datasets()
