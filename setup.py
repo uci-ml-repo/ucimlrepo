@@ -8,7 +8,4 @@ setup(name='ucimlrepo',
       author_email='philtr928@example.com',
       license='MIT',
       packages=['ucimlrpeo'],
-      install_requires=[
-          'pandas',
-      ],
       zip_safe=False)
