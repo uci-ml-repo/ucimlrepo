@@ -8,8 +8,5 @@ setup(
       author='Philip Truong',
       author_email='philtr928@example.com',
       license='MIT',
-      install_requires=[
-          'pandas',
-      ],
-      packages=find_packages(exclude=("tests", "test.*", "*test*")),
+      packages=find_packages(),
 )
