@@ -46,22 +46,23 @@ Provide either a dataset ID or name as keyword (named) arguments. Cannot accept 
 - **`name`**: Dataset name, or substring of name
 
 ### Returns
-- **`data`**: Contains dataset matrices as **pandas** dataframes
-	- `ids`: Dataframe of ID columns
-	- `features`: Dataframe of feature columns
-	- `targets`: Dataframe of target columns
-	- `original`: Dataframe consisting of all IDs, features, and targets
-	- `headers`: List of all attribute names/headers
-- **`metadata`**: Contains metadata information about the dataset
-	- See Metadata section below for details
-- **`attributes`**: Contains attribute details presented in a tabular/dataframe format
-	- `name`: Attribute name
-	- `role`: Whether the attribute is an ID, feature, or target
-	- `type`: Data type e.g. categorical, integer, continuous
-	- `demographic`: Indicates whether the attribute represents demographic data
-	- `description`: Short description of attribute
-	- `units`: Attribute units for non-categorical data
-	- `missing_values`: Whether there are missing values in the attribute's column
+- **`dataset`**
+	- **`data`**: Contains dataset matrices as **pandas** dataframes
+		- `ids`: Dataframe of ID columns
+		- `features`: Dataframe of feature columns
+		- `targets`: Dataframe of target columns
+		- `original`: Dataframe consisting of all IDs, features, and targets
+		- `headers`: List of all attribute names/headers
+	- **`metadata`**: Contains metadata information about the dataset
+		- See Metadata section below for details
+	- **`attributes`**: Contains attribute details presented in a tabular/dataframe format
+		- `name`: Attribute name
+		- `role`: Whether the attribute is an ID, feature, or target
+		- `type`: Data type e.g. categorical, integer, continuous
+		- `demographic`: Indicates whether the attribute represents demographic data
+		- `description`: Short description of attribute
+		- `units`: Attribute units for non-categorical data
+		- `missing_values`: Whether there are missing values in the attribute's column
    
 
 ## `list_available_datasets`
