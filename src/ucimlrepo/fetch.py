@@ -1,42 +1,65 @@
 import json
-import urllib.request
-from urllib.parse import quote
 import pandas as pd
 from typing import Optional
+import urllib.request
+import urllib.parse
 
 from ucimlrepo.dotdict import dotdict
 
+# constants
+
+# API endpoints
 API_BASE_URL = 'https://archive.ics.uci.edu/api/dataset'
+API_LIST_URL = 'https://archive.ics.uci.edu/api/datasets/list'
+
+# base location of data csv files
 DATASET_FILE_BASE_URL = 'https://archive.ics.uci.edu/static/public'
 
+# available categories of datasets to filter by 
+VALID_FILTERS = ['aim-ahead']
 
+
+# custom exception for no dataset found during fetch_ucirepo
 class DatasetNotFoundError(Exception):
     pass
+
 
 def fetch_ucirepo(
         name: Optional[str] = None, 
         id: Optional[int] = None
     ):
+    '''
+    Loads a dataset from the UCI ML Repository, including the dataframes and metadata information.
 
-    # check arguments
-    # only one or the other
+    Parameters: 
+        id (int): Dataset ID for UCI ML Repository
+        name (str): Dataset name, or substring of name
+        (Only provide id or name, not both)
+
+    Returns:
+        result (dotdict): object containing dataset metadata, dataframes, and attribute info in its properties
+    '''
+
+    # check that only one argument is provided
     if name and id:
         raise ValueError('Only specify either dataset name or ID, not both')
     
-    # fetch metadata
+    # validate types of arguments and add them to the endpoint query string
     api_url = API_BASE_URL
     if name:
         if type(name) != str:
             raise ValueError('Name must be a string')
-        api_url += '?name=' + quote(name)
+        api_url += '?name=' + urllib.parse.quote(name)
     elif id:
         if type(id) != int:
             raise ValueError('ID must be an integer')
         api_url += '?id=' + str(id)
     else:
+        # no arguments provided
         raise ValueError('Must provide a dataset name or ID')
 
 
+    # fetch metadata from API
     data = None
     try:
         response  = urllib.request.urlopen(api_url)
@@ -44,31 +67,31 @@ def fetch_ucirepo(
     except (urllib.error.URLError, urllib.error.HTTPError):
         raise ConnectionError('Error connecting to server')
 
-
     # verify that dataset exists 
     if data['status'] != 200:
         list_available_datasets()
         error_msg = data['message'] if 'message' in data else 'Dataset not found in repository'
         raise DatasetNotFoundError(error_msg)
     
+
+    # extract ID, name, and URL from metadata
     metadata = data['data']
-    
     if not id:
         id = metadata['uci_id']
     elif not name:
         name = metadata['name']
     
-    # read dataset file
-    # url = '{}/{}/data.csv'.format(DATASET_FILE_BASE_URL, id, slug)
     data_url = metadata['data_url']
 
+    # no data URL means that the dataset cannot be imported into Python
+    # i.e. it does not yet have a standardized CSV file for pandas to parse
     if not data_url:
         list_available_datasets()
         raise DatasetNotFoundError('"{}" dataset (id={}) exists in the repository, but is not available for import.'.format(name, id))
     
 
+    # parse into dataframe using pandas
     df = None
-    # parse into dataframe
     try:
         df = pd.read_csv(data_url)
     except (urllib.error.URLError, urllib.error.HTTPError):
@@ -84,30 +107,25 @@ def fetch_ucirepo(
 
     # feature information, class labels
     attributes = metadata['attributes']
-    del metadata['attributes']
+    del metadata['attributes']      # moved from metadata to a separate property
     
-
-    # matrix of features, list of ids, list of targets
+    # organize attributes into IDs, features, or targets
     attributes_by_role = {
         'ID': [],
         'Feature': [],
         'Target': []
     }
-
     for attribute in attributes:
         if attribute['role'] not in attributes_by_role:
             raise ValueError('Role must be one of "ID", "Feature", or "Target"')
         attributes_by_role[attribute['role']].append(attribute['name'])
 
-    # print(attributes_by_role['ID'])
-    # print(attributes_by_role['Feature'])
-    # print(attributes_by_role['Target'])
-
+    # extract dataframes for each attribute role
     ids_df = df[attributes_by_role['ID']] if len(attributes_by_role['ID']) > 0 else None
     features_df = df[attributes_by_role['Feature']] if len(attributes_by_role['Feature']) > 0 else None
     targets_df = df[attributes_by_role['Target']] if len(attributes_by_role['Target']) > 0 else None
 
-
+    # place all varieties of dataframes in data object
     data = {
         'ids': ids_df,
         'features': features_df,
@@ -116,12 +134,14 @@ def fetch_ucirepo(
         'headers': headers,
     }
 
+    # convert attributes from JSON structure to tabular structure for easier visualization
     attributes = pd.DataFrame.from_records(attributes)
 
     # alternative usage: 
     # attributes.age.role or attributes.slope.description
     # print(attributes) -> json-like dict with keys [name] -> details
 
+    # make nested metadata fields accessible via dot notation
     metadata['additional_info'] = dotdict(metadata['additional_info'])
     metadata['intro_paper'] = dotdict(metadata['intro_paper'])
     
@@ -132,20 +152,64 @@ def fetch_ucirepo(
         'attributes': attributes
     }
 
-    # return
+    # convert to dictionary with dot notation
     return dotdict(result)
     
 
 
-def list_available_datasets():
+def list_available_datasets(filter: Optional[str] = None):
+    '''
+    Prints a list of datasets that can be imported via fetch_ucirepo function
+
+    Parameters: 
+        filter (str): Optional query to filter available datasets based on a label
+
+    Returns:
+        None
+    '''
+
+    # validate filter input
+    if filter:
+        if type(filter) != str:
+            raise ValueError('Filter must be a string') 
+        elif filter.lower() not in VALID_FILTERS:
+            raise ValueError('Filter not recognized. Valid filters: [{}]'.format(', '.join(VALID_FILTERS))) 
+    
+    # construct endpoint
+    api_list_url = API_LIST_URL
+    if filter:
+        api_list_url += '?filter=' + filter.lower()
+
+    # fetch list of datasets from API
+    data = None
+    try:
+        response  = urllib.request.urlopen(api_list_url)
+        data = json.load(response)['data']
+    except (urllib.error.URLError, urllib.error.HTTPError):
+        raise ConnectionError('Error connecting to server')
+    
+    # column width for dataset name
+    maxNameLen = max([len(dataset['name']) for dataset in data]) + 3
+
+    # print table title
     print('-------------------------------------')
-    print('The following datasets are available:')
+    print('The following {}datasets are available:'.format(filter.lower() + ' ' if filter else ''))
     print('-------------------------------------')
-    # change to a static/public URL
-    with urllib.request.urlopen('{}/info/available_py_datasets.json'.format(DATASET_FILE_BASE_URL)) as resp:
-        print('{:<50} {:<6} {:<100}'.format('Dataset Name', 'ID', 'Prediction Task'))
-        print('{:<50} {:<6} {:<100}'.format('------------', '--', '---------------'))
-        data = json.load(resp)
-        for dataset in data:
-            print('{:<50} {:<6} {:<100}'.format(dataset['name'], dataset['id'], dataset['description']))
-        print()
+
+    # print table headers
+    header_str = '{:<{width}} {:<6}'.format('Dataset Name', 'ID', width=maxNameLen)
+    underline_str = '{:<{width}} {:<6}'.format('------------', '--', width=maxNameLen)
+    if len(data) > 0 and 'description' in data[0]:
+        header_str += ' {:<100}'.format('Prediction Task')
+        underline_str += ' {:<100}'.format('---------------')
+    print(header_str)
+    print(underline_str)
+    
+    # print row for each dataset
+    for dataset in data:
+        row_str = '{:<{width}} {:<6}'.format(dataset['name'], dataset['id'], width=maxNameLen)
+        if 'description' in dataset:
+            row_str += ' {:<100}'.format(dataset['description'])
+        print(row_str)
+    
+    print()
