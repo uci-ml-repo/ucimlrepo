@@ -6,6 +6,7 @@ import urllib.parse
 
 from ucimlrepo.dotdict import dotdict
 
+
 # constants
 
 # API endpoints
@@ -137,7 +138,7 @@ def fetch_ucirepo(
     # convert attributes from JSON structure to tabular structure for easier visualization
     attributes = pd.DataFrame.from_records(attributes)
 
-    # alternative usage: 
+    # alternative usage?: 
     # attributes.age.role or attributes.slope.description
     # print(attributes) -> json-like dict with keys [name] -> details
 
