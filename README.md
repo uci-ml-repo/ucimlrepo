@@ -68,7 +68,8 @@ Provide either a dataset ID or name as keyword (named) arguments. Cannot accept 
 Prints a list of datasets that can be imported via `fetch_ucirepo`
 ### Parameters
 - **`filter`**: Optional keyword argument to filter available datasets based on a category
-	- Valid filters: `aim-ahead` 
+	- Valid filters: `aim-ahead`
+- **`search`**: Optional keyword argument to search datasets whose name contains the search query
 ### Returns
 none
 
