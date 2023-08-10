@@ -1,6 +1,5 @@
 # `ucimlrepo` package
 Package to easily import datasets from the UC Irvine Machine Learning Repository into scripts and notebooks. 
-Pending: name of package and functions
 
 ## Installation
 In a Jupyter notebook, install with the command 
