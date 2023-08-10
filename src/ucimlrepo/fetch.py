@@ -158,7 +158,7 @@ def fetch_ucirepo(
     
 
 
-def list_available_datasets(filter: Optional[str] = None):
+def list_available_datasets(filter: Optional[str] = None, search: Optional[str] = None):
     '''
     Prints a list of datasets that can be imported via fetch_ucirepo function
 
@@ -175,11 +175,24 @@ def list_available_datasets(filter: Optional[str] = None):
             raise ValueError('Filter must be a string') 
         elif filter.lower() not in VALID_FILTERS:
             raise ValueError('Filter not recognized. Valid filters: [{}]'.format(', '.join(VALID_FILTERS))) 
+        filter = filter.lower()
+        
+    # validate search input
+    if search:
+        if type(search) != str:
+            raise ValueError('Search query must be a string')
+        search = search.lower()
     
-    # construct endpoint
+    # construct endpoint URL
     api_list_url = API_LIST_URL
-    if filter:
-        api_list_url += '?filter=' + filter.lower()
+    query_params = {}
+    if filter or search:
+        if filter:
+            query_params['filter'] = filter
+        if search:
+            query_params['search'] = search
+
+        api_list_url += '?' + urllib.parse.urlencode(query_params)
 
     # fetch list of datasets from API
     data = None
@@ -188,14 +201,19 @@ def list_available_datasets(filter: Optional[str] = None):
         data = json.load(response)['data']
     except (urllib.error.URLError, urllib.error.HTTPError):
         raise ConnectionError('Error connecting to server')
+
+    if len(data) == 0:
+        print('No datasets found')
+        return
     
     # column width for dataset name
-    maxNameLen = max([len(dataset['name']) for dataset in data]) + 3
+    maxNameLen = max(max([len(dataset['name']) for dataset in data]) + 3, 15)
 
     # print table title
-    print('-------------------------------------')
-    print('The following {}datasets are available:'.format(filter.lower() + ' ' if filter else ''))
-    print('-------------------------------------')
+    title = 'The following {}datasets are available{}:'.format(filter + ' ' if filter else '', ' for search query "{}"'.format(search) if search else '')
+    print('-' * len(title))
+    print(title)
+    print('-' * len(title))
 
     # print table headers
     header_str = '{:<{width}} {:<6}'.format('Dataset Name', 'ID', width=maxNameLen)
