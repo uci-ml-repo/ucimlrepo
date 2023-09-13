@@ -31,8 +31,8 @@ Restart the kernel and import the module `ucimlrepo`.
     print(heart_disease.metadata.num_instances)
     print(heart_disease.metadata.additional_info.summary)
     
-    # access attribute info in tabular format
-    print(heart_disease.attributes)
+    # access variable info in tabular format
+    print(heart_disease.variables)
 
 
 
@@ -51,17 +51,17 @@ Provide either a dataset ID or name as keyword (named) arguments. Cannot accept 
 		- `features`: Dataframe of feature columns
 		- `targets`: Dataframe of target columns
 		- `original`: Dataframe consisting of all IDs, features, and targets
-		- `headers`: List of all attribute names/headers
+		- `headers`: List of all variable names/headers
 	- **`metadata`**: Contains metadata information about the dataset
 		- See Metadata section below for details
-	- **`attributes`**: Contains attribute details presented in a tabular/dataframe format
-		- `name`: Attribute name
-		- `role`: Whether the attribute is an ID, feature, or target
+	- **`variables`**: Contains variable details presented in a tabular/dataframe format
+		- `name`: Variable name
+		- `role`: Whether the variable is an ID, feature, or target
 		- `type`: Data type e.g. categorical, integer, continuous
-		- `demographic`: Indicates whether the attribute represents demographic data
-		- `description`: Short description of attribute
-		- `units`: Attribute units for non-categorical data
-		- `missing_values`: Whether there are missing values in the attribute's column
+		- `demographic`: Indicates whether the variable represents demographic data
+		- `description`: Short description of variable
+		- `units`: variable units for non-categorical data
+		- `missing_values`: Whether there are missing values in the variable's column
    
 
 ## `list_available_datasets`
@@ -82,7 +82,7 @@ none
 - `characteristics`: Dataset types e.g. multivariate, sequential
 - `num_instances`: Number of rows or samples
 - `num_features`: Number of feature columns
-- `attribute_types`: Data types of attributes
+- `feature_types`: Data types of features
 - `target_col`: Name of target column(s)
 - `index_col`: Name of index column(s)
 - `has_missing_values`: Whether the dataset contains missing values
@@ -101,7 +101,5 @@ none
 	- `recommended_data_splits`: Are there recommended data splits?
 	- `sensitive_data`: Does the dataset contain data that might be considered sensitive in any way?
 	- `preprocessing_description`: Was there any data preprocessing performed?
-	- `software_available`: Whether there are missing values in the attribute's column
-	- `used_for`: Has the dataset been used for any tasks already?
-	- `attribute_info`: Additional free text description for attributes
+	- `variable_info`: Additional free text description for variables
 	- `citation`: Citation Requests/Acknowledgements

@@ -38,7 +38,7 @@ def fetch_ucirepo(
         (Only provide id or name, not both)
 
     Returns:
-        result (dotdict): object containing dataset metadata, dataframes, and attribute info in its properties
+        result (dotdict): object containing dataset metadata, dataframes, and variable info in its properties
     '''
 
     # check that only one argument is provided
@@ -103,28 +103,28 @@ def fetch_ucirepo(
         raise DatasetNotFoundError('Error reading data csv file for "{}" dataset (id={}).'.format(name, id))
 
 
-    # header line should be attribute names
+    # header line should be variable names
     headers = df.columns
 
     # feature information, class labels
-    attributes = metadata['attributes']
-    del metadata['attributes']      # moved from metadata to a separate property
+    variables = metadata['variables']
+    del metadata['variables']      # moved from metadata to a separate property
     
-    # organize attributes into IDs, features, or targets
-    attributes_by_role = {
+    # organize variables into IDs, features, or targets
+    variables_by_role = {
         'ID': [],
         'Feature': [],
         'Target': []
     }
-    for attribute in attributes:
-        if attribute['role'] not in attributes_by_role:
+    for variable in variables:
+        if variable['role'] not in variables_by_role:
             raise ValueError('Role must be one of "ID", "Feature", or "Target"')
-        attributes_by_role[attribute['role']].append(attribute['name'])
+        variables_by_role[variable['role']].append(variable['name'])
 
-    # extract dataframes for each attribute role
-    ids_df = df[attributes_by_role['ID']] if len(attributes_by_role['ID']) > 0 else None
-    features_df = df[attributes_by_role['Feature']] if len(attributes_by_role['Feature']) > 0 else None
-    targets_df = df[attributes_by_role['Target']] if len(attributes_by_role['Target']) > 0 else None
+    # extract dataframes for each variable role
+    ids_df = df[variables_by_role['ID']] if len(variables_by_role['ID']) > 0 else None
+    features_df = df[variables_by_role['Feature']] if len(variables_by_role['Feature']) > 0 else None
+    targets_df = df[variables_by_role['Target']] if len(variables_by_role['Target']) > 0 else None
 
     # place all varieties of dataframes in data object
     data = {
@@ -135,12 +135,12 @@ def fetch_ucirepo(
         'headers': headers,
     }
 
-    # convert attributes from JSON structure to tabular structure for easier visualization
-    attributes = pd.DataFrame.from_records(attributes)
+    # convert variables from JSON structure to tabular structure for easier visualization
+    variables = pd.DataFrame.from_records(variables)
 
     # alternative usage?: 
-    # attributes.age.role or attributes.slope.description
-    # print(attributes) -> json-like dict with keys [name] -> details
+    # variables.age.role or variables.slope.description
+    # print(variables) -> json-like dict with keys [name] -> details
 
     # make nested metadata fields accessible via dot notation
     metadata['additional_info'] = dotdict(metadata['additional_info'])
@@ -150,7 +150,7 @@ def fetch_ucirepo(
     result = {
         'data': dotdict(data),
         'metadata': dotdict(metadata),
-        'attributes': attributes
+        'variables': variables
     }
 
     # convert to dictionary with dot notation
