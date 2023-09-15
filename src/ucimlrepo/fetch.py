@@ -119,7 +119,7 @@ def fetch_ucirepo(
     }
     for variable in variables:
         if variable['role'] not in variables_by_role:
-            raise ValueError('Role must be one of "ID", "Feature", or "Target"')
+            raise ValueError('Role must be one of "ID", "Feature", or "Target", or "Other"')
         variables_by_role[variable['role']].append(variable['name'])
 
     # extract dataframes for each variable role
