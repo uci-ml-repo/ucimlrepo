@@ -1,6 +1,6 @@
 import unittest
 # from ucimlrepo.fetch import fetch, list_available_datasets
-from ucimlrepo import list_available_datasets, fetch_mlrepo
+from ucimlrepo import list_available_datasets, fetch_ucirepo
 
 class TestMLRepo(unittest.TestCase):
     # def test_invalid_inputs(self):
@@ -19,8 +19,9 @@ class TestMLRepo(unittest.TestCase):
     #    self.assertRaises(fetch_mlrepo(id=53))
 
     def test_heart_disease(self):
-      heart_disease = fetch_mlrepo(id=565)
-      print(heart_disease.attributes)
+      heart_disease = fetch_ucirepo(id=565)
+      print(heart_disease.variables)
+      print(heart_disease.metadata.num_features)
 
       # self.assertEqual(heart_disease.metadata.uci_id, 45)
       # self.assertEqual(heart_disease.metadata.repository_url, 'https://archive.ics.uci.edu/dataset/45/heart+disease')

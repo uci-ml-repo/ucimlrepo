@@ -114,7 +114,8 @@ def fetch_ucirepo(
     variables_by_role = {
         'ID': [],
         'Feature': [],
-        'Target': []
+        'Target': [],
+        'Other': []
     }
     for variable in variables:
         if variable['role'] not in variables_by_role:
