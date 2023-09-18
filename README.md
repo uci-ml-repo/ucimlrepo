@@ -104,3 +104,4 @@ none
 	- `preprocessing_description`: Was there any data preprocessing performed?
 	- `variable_info`: Additional free text description for variables
 	- `citation`: Citation Requests/Acknowledgements
+ - `external_url`: URL to external dataset page. This field will only exist for linked datasets i.e. not hosted by UCI
