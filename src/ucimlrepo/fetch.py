@@ -144,8 +144,11 @@ def fetch_ucirepo(
     # print(variables) -> json-like dict with keys [name] -> details
 
     # make nested metadata fields accessible via dot notation
-    metadata['additional_info'] = dotdict(metadata['additional_info'])
-    metadata['intro_paper'] = dotdict(metadata['intro_paper'])
+    if metadata['additional_info'] is not None:
+        metadata['additional_info'] = dotdict(metadata['additional_info'])
+
+    if metadata['intro_paper'] is not None:
+        metadata['intro_paper'] = dotdict(metadata['intro_paper'])
     
     # construct result object
     result = {
