@@ -1,6 +1,6 @@
 import unittest
 # from ucimlrepo.fetch import fetch, list_available_datasets
-from ucimlrepo import list_available_datasets, fetch_mlrepo
+from ucimlrepo import list_available_datasets, fetch_ucirepo
 
 class TestMLRepo(unittest.TestCase):
     # def test_invalid_inputs(self):
@@ -19,7 +19,7 @@ class TestMLRepo(unittest.TestCase):
     #    self.assertRaises(fetch_mlrepo(id=53))
 
     def test_heart_disease(self):
-      heart_disease = fetch_mlrepo(id=565)
+      heart_disease = fetch_ucirepo(id=2)
       print(heart_disease.attributes)
 
       # self.assertEqual(heart_disease.metadata.uci_id, 45)

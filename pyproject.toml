@@ -4,9 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ucimlrepo"
-version = "0.0.1"
+version = "0.0.2"
 authors = [
-  { name="Philip Truong", email="philtr928@gmail.com" },
+  { name="Philip Truong", email="ucirepository@gmail.com" },
 ]
 description = "Package to easily import datasets from the UC Irvine Machine Learning Repository into scripts and notebooks."
 readme = "README.md"
