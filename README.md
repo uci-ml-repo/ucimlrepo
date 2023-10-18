@@ -1,10 +1,12 @@
 # `ucimlrepo` package
 Package to easily import datasets from the UC Irvine Machine Learning Repository into scripts and notebooks. 
+<br>
+**Current Version: 0.0.3**
 
 ## Installation
 In a Jupyter notebook, install with the command 
 
-    !pip3 install ucimlrepo
+    !pip3 install -U ucimlrepo 
     
 Restart the kernel and import the module `ucimlrepo`.
 
@@ -103,3 +105,9 @@ none
 	- `variable_info`: Additional free text description for variables
 	- `citation`: Citation Requests/Acknowledgements
  - `external_url`: URL to external dataset page. This field will only exist for linked datasets i.e. not hosted by UCI
+
+
+## Links
+- [UCI Machine Learning Repository home page](https://archive.ics.uci.edu/)
+- [PyPi repository for this package](https://pypi.org/project/ucimlrepo)
+- [Submit an issue](https://github.com/uci-ml-repo/ucimlrepo-feedback/issues)
