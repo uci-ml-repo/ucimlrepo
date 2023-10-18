@@ -187,13 +187,14 @@ def list_available_datasets(filter: Optional[str] = None, search: Optional[str] 
     # construct endpoint URL
     api_list_url = API_LIST_URL
     query_params = {}
-    if filter or search:
-        if filter:
-            query_params['filter'] = filter
-        if search:
-            query_params['search'] = search
+    if filter:
+        query_params['filter'] = filter
+    else: 
+        query_params['filter'] = 'python'       # default filter should be 'python'
+    if search:
+        query_params['search'] = search
 
-        api_list_url += '?' + urllib.parse.urlencode(query_params)
+    api_list_url += '?' + urllib.parse.urlencode(query_params)
 
     # fetch list of datasets from API
     data = None
@@ -233,3 +234,4 @@ def list_available_datasets(filter: Optional[str] = None, search: Optional[str] 
         print(row_str)
     
     print()
+    
