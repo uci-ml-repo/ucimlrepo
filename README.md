@@ -24,7 +24,7 @@ Restart the kernel and import the module `ucimlrepo`.
     # access data
     X = heart_disease.data.features
     y = heart_disease.data.targets
-    # sklearn.linear_model.LinearRegression().fit(X, y)
+    # train model e.g. sklearn.linear_model.LinearRegression().fit(X, y)
     
     # access metadata
     print(heart_disease.metadata.uci_id)
