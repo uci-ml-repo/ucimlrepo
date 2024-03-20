@@ -6,7 +6,7 @@ import urllib.parse
 import certifi
 import ssl
 
-from dotdict import dotdict
+from ucimlrepo.dotdict import dotdict
 
 
 # constants
