@@ -1,6 +1,6 @@
 import unittest
 # from ucimlrepo import list_available_datasets, fetch_ucirepo
-from fetch import fetch_ucirepo, list_available_datasets
+from ucimlrepo import fetch_ucirepo, list_available_datasets
 
 class TestMLRepo(unittest.TestCase):
     def test_invalid_inputs(self):
@@ -26,7 +26,7 @@ class TestMLRepo(unittest.TestCase):
       with self.assertRaises(ValueError):
         list_available_datasets(search='')
 
-      #  list_available_datasets(area='climate and environment')  
+      list_available_datasets(area='climate and environment')  
       #  list_available_datasets(filter='python', area='climate and environment')  
       #  list_available_datasets(search='nino', area='climate and environment')  
 
