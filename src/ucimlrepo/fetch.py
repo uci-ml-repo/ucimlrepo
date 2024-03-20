@@ -3,8 +3,10 @@ import pandas as pd
 from typing import Optional
 import urllib.request
 import urllib.parse
+import certifi
+import ssl
 
-from ucimlrepo.dotdict import dotdict
+from dotdict import dotdict
 
 
 # constants
@@ -63,14 +65,13 @@ def fetch_ucirepo(
     # fetch metadata from API
     data = None
     try:
-        response  = urllib.request.urlopen(api_url)
+        response = urllib.request.urlopen(api_url, context=ssl.create_default_context(cafile=certifi.where()))
         data = json.load(response)
     except (urllib.error.URLError, urllib.error.HTTPError):
         raise ConnectionError('Error connecting to server')
 
     # verify that dataset exists 
     if data['status'] != 200:
-        list_available_datasets()
         error_msg = data['message'] if 'message' in data else 'Dataset not found in repository'
         raise DatasetNotFoundError(error_msg)
     
@@ -87,8 +88,7 @@ def fetch_ucirepo(
     # no data URL means that the dataset cannot be imported into Python
     # i.e. it does not yet have a standardized CSV file for pandas to parse
     if not data_url:
-        list_available_datasets()
-        raise DatasetNotFoundError('"{}" dataset (id={}) exists in the repository, but is not available for import.'.format(name, id))
+        raise DatasetNotFoundError('"{}" dataset (id={}) exists in the repository, but is not available for import. Please select a dataset from this list: https://archive.ics.uci.edu/datasets?skip=0&take=10&sort=desc&orderBy=NumHits&search=&Python=true'.format(name, id))
     
 
     # parse into dataframe using pandas
@@ -96,7 +96,6 @@ def fetch_ucirepo(
     try:
         df = pd.read_csv(data_url)
     except (urllib.error.URLError, urllib.error.HTTPError):
-        list_available_datasets()
         raise DatasetNotFoundError('Error reading data csv file for "{}" dataset (id={}).'.format(name, id))
         
     if df.empty:
@@ -159,12 +158,14 @@ def fetch_ucirepo(
     
 
 
-def list_available_datasets(filter: Optional[str] = None, search: Optional[str] = None):
+def list_available_datasets(filter: Optional[str] = None, search: Optional[str] = None, area: Optional[str] = None):
     '''
     Prints a list of datasets that can be imported via fetch_ucirepo function
 
     Parameters: 
         filter (str): Optional query to filter available datasets based on a label
+        search (str): Optional query to search for available datasets by name
+        area (str): Optional query to filter available datasets based on subject area
 
     Returns:
         None
@@ -174,8 +175,6 @@ def list_available_datasets(filter: Optional[str] = None, search: Optional[str] 
     if filter:
         if type(filter) != str:
             raise ValueError('Filter must be a string') 
-        elif filter.lower() not in VALID_FILTERS:
-            raise ValueError('Filter not recognized. Valid filters: [{}]'.format(', '.join(VALID_FILTERS))) 
         filter = filter.lower()
         
     # validate search input
@@ -193,16 +192,24 @@ def list_available_datasets(filter: Optional[str] = None, search: Optional[str] 
         query_params['filter'] = 'python'       # default filter should be 'python'
     if search:
         query_params['search'] = search
+    if area:
+        query_params['area'] = area
 
     api_list_url += '?' + urllib.parse.urlencode(query_params)
 
     # fetch list of datasets from API
     data = None
     try:
-        response  = urllib.request.urlopen(api_list_url)
-        data = json.load(response)['data']
+        response  = urllib.request.urlopen(api_list_url, context=ssl.create_default_context(cafile=certifi.where()))
+        resp_json = json.load(response)
     except (urllib.error.URLError, urllib.error.HTTPError):
         raise ConnectionError('Error connecting to server')
+
+    if resp_json['status'] != 200:
+        error_msg = resp_json['message'] if 'message' in resp_json else 'Internal Server Error'
+        raise ValueError(resp_json['message'])
+    
+    data = resp_json['data']
 
     if len(data) == 0:
         print('No datasets found')
@@ -234,4 +241,3 @@ def list_available_datasets(filter: Optional[str] = None, search: Optional[str] 
         print(row_str)
     
     print()
-    
