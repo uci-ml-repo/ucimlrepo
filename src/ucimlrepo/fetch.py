@@ -222,6 +222,8 @@ def list_available_datasets(filter: Optional[str] = None, search: Optional[str] 
     title = 'The following {}datasets are available{}:'.format(filter + ' ' if filter else '', ' for search query "{}"'.format(search) if search else '')
     print('-' * len(title))
     print(title)
+    if area:
+        print('For subject area: {}'.format(area))
     print('-' * len(title))
 
     # print table headers
