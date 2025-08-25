@@ -58,7 +58,10 @@ class TestMLRepo(unittest.TestCase):
       self.assertEqual(heart_disease.data.targets.shape, (303, 1))
 
       self.assertEqual(heart_disease.variables['name'][0], 'age')
-        
+
+    def test_skip_ssl_cert(self):
+       dataset = fetch_ucirepo(id=45, skip_ssl_cert=True)
+       self.assertEqual(dataset.metadata.uci_id, 45)
 
 if __name__ == '__main__':
   unittest.main()
